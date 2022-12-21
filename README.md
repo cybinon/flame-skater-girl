@@ -1,4 +1,4 @@
-# skattergirl
+# Skater Girl
 
 * Study from https://www.youtube.com/@CraigOda
 * Playlist: https://www.youtube.com/watch?v=hwQpBuZoV9s&list=PLxvyAnoL-vu61SszbB5ecb0mV1ppwAIIL&index=1
