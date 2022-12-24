@@ -1,3 +1,4 @@
+import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +10,11 @@ void main() {
   runApp(GameWidget(game: SkateGame()));
 }
 
-class SkateGame extends FlameGame with HasCollisionDetection {
+class SkateGame extends FlameGame with HasCollisionDetection, TapDetector {
   Sora sora = Sora();
-  double gravity = 1.8;
+  double gravity = 2.8;
+  double pushSpeed = 100;
+  final double jumpForce = 10;
   Vector2 velocity = Vector2(0, 0);
   late TiledComponent homeMap;
 
@@ -46,7 +49,34 @@ class SkateGame extends FlameGame with HasCollisionDetection {
     super.update(dt);
     if (!sora.onGround) {
       velocity.y += gravity;
-      sora.position.y += velocity.y * dt;
+    }
+    sora.position += velocity * dt;
+  }
+
+  @override
+  void onTapDown(TapDownInfo info) {
+    super.onTapDown(info);
+    if (sora.onGround) {
+      if (info.eventPosition.game.x < 100) {
+        if (sora.facingRight) {
+          sora.flipHorizontallyAroundCenter();
+          sora.facingRight = false;
+        }
+        sora.x -= 5;
+        velocity.x -= pushSpeed;
+      } else if (info.eventPosition.game.x > size[0] - 100) {
+        if (!sora.facingRight) {
+          sora.flipHorizontallyAroundCenter();
+          sora.facingRight = true;
+        }
+        sora.x += 5;
+        velocity.x += pushSpeed;
+      }
+      if (info.eventPosition.game.y < 100) {
+        print('move up');
+        sora.y -= 10;
+        velocity.y = -jumpForce;
+      }
     }
   }
 }
